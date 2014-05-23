@@ -4,9 +4,7 @@ import os
 import sys
 import jieba
 
-cur = 'E:\TextClassification'
-#cur = os.getcwd()
-
+#read stopword from stopwords.txt
 def ReadStopWords(path):
     f = open(path, 'r')
     stopWords = []
@@ -15,21 +13,14 @@ def ReadStopWords(path):
         line = line[0:len(line)-1]
         stopWords.append(line)
     f.close()
-    
-    '''
-    f = open('E:\\TextClassification\\test.txt', 'w')
-    for word in stopWords:
-        f.write(word.encode('gbk'))
-    f.close()
-    '''
-    
+        
     return stopWords
 
 #read stop words from StopWords.txt
-stopWords = ReadStopWords('E:\\TextClassification\\StopWords.txt')
+stopWords = ReadStopWords('E:\\TextClassificationData\\StopWords.txt')
 print 'finish read stopwords'
     
-#read file content from file which is named fileName
+#read file content from file which is named fileName, using jieba to do word segmentation
 def ReadFile(fileName):
     f = open(fileName, 'r')
     
@@ -77,5 +68,4 @@ def ReadAllCatalogs(path, training=True):
     return catalog
     
 if __name__ == '__main__':
-    print 'test'
-    content = ReadAllCatalogs('E:\TextClassification\SogouC.mini\Sample')
+    content = ReadAllCatalogs('E:\TextClassificationData\SogouC.mini\Sample')
