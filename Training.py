@@ -3,6 +3,7 @@ import FeatureFiltering
 featureVector = FeatureFiltering.getFeatures()
 docVector = {}
 
+# calculate tf*idf value for every doc as the representation of doc vector
 for catalog in FeatureFiltering.fileToWords:
     catalog = FeatureFiltering.fileToWords[catalog]
     for doc in catalog:
@@ -15,4 +16,3 @@ for catalog in FeatureFiltering.fileToWords:
 def getDocVector():
     global docVector
     return docVector
-        
