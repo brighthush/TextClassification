@@ -1,3 +1,4 @@
+# coding: GBK
 import FeatureFiltering
 
 featureVector = FeatureFiltering.getFeatures()

@@ -1,5 +1,6 @@
 # coding: GBK
 
+import configuration
 import os
 import sys
 import jieba
@@ -17,7 +18,7 @@ def ReadStopWords(path):
     return stopWords
 
 #read stop words from StopWords.txt
-stopWords = ReadStopWords('E:\\TextClassificationData\\StopWords.txt')
+stopWords = ReadStopWords(configuration.stopwords_file)
 print 'finish read stopwords'
     
 #read file content from file which is named fileName, using jieba to do word segmentation
@@ -43,6 +44,7 @@ def ReadDir(dirName, training=True):
     
     fileContent = {}
 
+    file_cnt = 0
     print 'processing dir %s ...'%(dirName)
     fileList = os.listdir(dirName)
     for fileName in fileList:
@@ -57,6 +59,9 @@ def ReadDir(dirName, training=True):
                 print '    processing %s ...'%(fileName)
                 text = ReadFile(dirName+'\\'+fileName)
                 fileContent[dirName+'\\'+fileName] = text
+        file_cnt += 1
+        if file_cnt>200:
+            break
     return fileContent
 
 #read all catalogs in directory named path

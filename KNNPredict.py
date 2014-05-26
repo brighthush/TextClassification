@@ -1,10 +1,12 @@
+# coding: GBK
+
 import configuration
 import Training
 import ReadData
 import math
 
-docVector = Training.getDocVector()
-testFileToWord = ReadData.ReadAllCatalogs(configuration.test_data_directory, False)
+training_doc_vector = Training.getDocVector()
+test_files_to_words = ReadData.ReadAllCatalogs(configuration.test_data_directory, False)
 
 def getDocVector(content, featureVector):
     fileVector = {}
@@ -41,7 +43,7 @@ def determine_KNN(doc, k_nearest_neighbour):
     neighbour_count = {}
     neighbour_similarity_sum = {}
     for neighbour, value in k_nearest_neighbour:
-        if True:
+        if value>0:
             neighbour = get_catalog(neighbour)
             if neighbour in neighbour_count:
                 neighbour_count[neighbour] += 1
@@ -59,7 +61,8 @@ def determine_KNN(doc, k_nearest_neighbour):
             elif neighbour_count[neighbour] == neighbour_count[catalog] \
                 and neighbour_similarity_sum[neighbour] > neighbour_similarity_sum[catalog]:
                     catalog = neighbour
-                
+            
+        
     return catalog
         
 #get a list with K documents in the formate [(fileName, similarity value),...]
@@ -88,9 +91,9 @@ def get_accuracy(prediction):
 if __name__ == '__main__':
     testFileVectorFile = open('E:\\TextClassificationData\\test_content.txt', 'w')
     testFileVector = None
-    testFileVector = getDocVector(testFileToWord, Training.featureVector)
+    testFileVector = getDocVector(test_files_to_words, Training.featureVector)
     
-    result, prediction = KNN(docVector, testFileVector, configuration.top_k_number)
+    result, prediction = KNN(training_doc_vector, testFileVector, configuration.top_k_number)
     accuracy = get_accuracy(prediction)
     testFileVectorFile.write('accuracy:%.6lf'%(accuracy)+'\n')
     for doc in result:
