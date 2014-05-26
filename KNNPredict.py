@@ -3,7 +3,7 @@ import ReadData
 import math
 
 docVector = Training.getDocVector()
-testFileToWord = ReadData.ReadAllCatalogs('E:\TextClassification\SogouC.mini\Sample', False)
+testFileToWord = ReadData.ReadAllCatalogs('E:\TextClassificationData\SogouC.mini\Sample', False)
 
 def getDocVector(content, featureVector):
     fileVector = {}
@@ -17,7 +17,7 @@ def getDocVector(content, featureVector):
             fileVector[doc] = vector
     return fileVector
 
-def similarity(vectora, vectorb) :
+def similarity(vectora, vectorb):
     ans = 0
     a = 0
     b = 0
@@ -30,9 +30,41 @@ def similarity(vectora, vectorb) :
     else:
         ans /= math.sqrt(a*b)
         return ans
-
+        
+def get_catalog(file_name):
+    word_list = file_name.split('\\')
+    return word_list[-2]
+        
+#determine one document by its K nearest neighbour
+def determine_KNN(doc, k_nearest_neighbour):
+    neighbour_count = {}
+    neighbour_similarity_sum = {}
+    for neighbour, value in k_nearest_neighbour:
+        if True:
+            neighbour = get_catalog(neighbour)
+            if neighbour in neighbour_count:
+                neighbour_count[neighbour] += 1
+                neighbour_similarity_sum[neighbour] += value
+            else:
+                neighbour_count[neighbour] = 1
+                neighbour_similarity_sum[neighbour] = value
+    catalog = None
+    for neighbour in neighbour_count:
+        if catalog == None:
+            catalog = neighbour
+        else:
+            if neighbour_count[neighbour] > neighbour_count[catalog]:
+                catalog = neighbour
+            elif neighbour_count[neighbour] == neighbour_count[catalog] \
+                and neighbour_similarity_sum[neighbour] > neighbour_similarity_sum[catalog]:
+                    catalog = neighbour
+                
+    return catalog
+        
+#get a list with K documents in the formate [(fileName, similarity value),...]
 def KNN(trainVector, testVector, K=11):
     result = {}
+    prediction = {}
     for testDoc in testVector:
         similarityVector = {}
         for trainDoc in trainVector:
@@ -40,16 +72,17 @@ def KNN(trainVector, testVector, K=11):
         result[testDoc] = similarityVector
         similarityVector = sorted(similarityVector.items(), lambda x, y:cmp(x[1], y[1]), reverse=True)
         result[testDoc] = similarityVector[0:K]
-    return result
+        prediction[testDoc] = determine_KNN(testDoc, result[testDoc])
+    return result, prediction
     
 if __name__ == '__main__':
-    testFileVectorFile = open('E:\\TextClassification\\test_content.txt', 'w')
+    testFileVectorFile = open('E:\\TextClassificationData\\test_content.txt', 'w')
     testFileVector = None
     testFileVector = getDocVector(testFileToWord, Training.featureVector)
     
-    result = KNN(docVector, testFileVector)
+    result, prediction = KNN(docVector, testFileVector)
     for doc in result:
-        testFileVectorFile.write(doc.encode('gbk')+'\n')
+        testFileVectorFile.write(doc.encode('gbk')+' '+prediction[doc].encode('gbk')+'\n')
         vector = result[doc]
         for neighbor in vector:
             testFileVectorFile.write('    '+neighbor[0].encode('gbk')+'\n')
