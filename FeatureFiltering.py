@@ -1,9 +1,10 @@
 # coding: GBK
+import configuration
 import ReadData
 import math
 from operator import itemgetter
 
-fileToWords = ReadData.ReadAllCatalogs('E:\TextClassificationData\SogouC.mini\Sample')
+fileToWords = ReadData.ReadAllCatalogs(configuration.training_data_directory)
 
 wordFrequency = {}
 wordDocFrequency = {}
@@ -11,7 +12,7 @@ wordidf = {}
 docCount = 0
 
 #the default number of features is 2000
-featureNum = 2000
+featureNum = configuration.feature_number
 
 #get word list and sort them by their idf value, return the [(word, idf value), ...]
 def wordStatistic():

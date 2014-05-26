@@ -1,9 +1,10 @@
+import configuration
 import Training
 import ReadData
 import math
 
 docVector = Training.getDocVector()
-testFileToWord = ReadData.ReadAllCatalogs('E:\TextClassificationData\SogouC.mini\Sample', False)
+testFileToWord = ReadData.ReadAllCatalogs(configuration.test_data_directory, False)
 
 def getDocVector(content, featureVector):
     fileVector = {}
@@ -74,13 +75,24 @@ def KNN(trainVector, testVector, K=11):
         result[testDoc] = similarityVector[0:K]
         prediction[testDoc] = determine_KNN(testDoc, result[testDoc])
     return result, prediction
+
+def get_accuracy(prediction):
+    true_positive = 0
+    for doc in prediction:
+        predicted_catalog = prediction[doc]
+        doc = get_catalog(doc)
+        if doc == predicted_catalog:
+            true_positive += 1
+    return float(true_positive)/float(len(prediction))
     
 if __name__ == '__main__':
     testFileVectorFile = open('E:\\TextClassificationData\\test_content.txt', 'w')
     testFileVector = None
     testFileVector = getDocVector(testFileToWord, Training.featureVector)
     
-    result, prediction = KNN(docVector, testFileVector)
+    result, prediction = KNN(docVector, testFileVector, configuration.top_k_number)
+    accuracy = get_accuracy(prediction)
+    testFileVectorFile.write('accuracy:%.6lf'%(accuracy)+'\n')
     for doc in result:
         testFileVectorFile.write(doc.encode('gbk')+' '+prediction[doc].encode('gbk')+'\n')
         vector = result[doc]
