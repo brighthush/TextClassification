@@ -9,6 +9,9 @@ fileToWords = ReadData.ReadAllCatalogs(configuration.training_data_directory)
 wordFrequency = {}
 wordDocFrequency = {}
 wordidf = {}
+doc_word_frequency = {}
+
+# the number of documents
 docCount = 0
 
 #the default number of features is 2000
@@ -20,12 +23,14 @@ def wordStatistic():
     global wordDocFrequency
     global wordidf
     global docCount
+    global doc_word_frequency
     
     for catalog in fileToWords:
         catalog = fileToWords[catalog]
         docCount += len(catalog)
         for file in catalog:
             wordBag = set()
+            word_frequency = {}
             for word in catalog[file]:
                 if word in wordFrequency:
                     wordFrequency[word] += 1
@@ -38,6 +43,10 @@ def wordStatistic():
                         wordDocFrequency[word] += 1
                     else:
                         wordDocFrequency[word] = 1
+                    word_frequency[word] = 1
+                else:
+                    word_frequency[word] += 1
+            doc_word_frequency[file] = word_frequency
 
     for word in wordFrequency:
         wordidf[word] = math.log(float(docCount)/float(wordDocFrequency[word]), 2)

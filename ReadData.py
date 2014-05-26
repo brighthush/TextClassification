@@ -60,7 +60,7 @@ def ReadDir(dirName, training=True):
                 text = ReadFile(dirName+'\\'+fileName)
                 fileContent[dirName+'\\'+fileName] = text
         file_cnt += 1
-        if file_cnt>200:
+        if file_cnt>100:
             break
     return fileContent
 

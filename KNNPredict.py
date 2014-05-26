@@ -5,8 +5,13 @@ import Training
 import ReadData
 import math
 
+print 'began to get training_doc_vector'
 training_doc_vector = Training.getDocVector()
+print 'finished getting training_doc_vector'
+
+print 'began to get test_files_to_words'
 test_files_to_words = ReadData.ReadAllCatalogs(configuration.test_data_directory, False)
+print 'finished getting test_files_to_words'
 
 def getDocVector(content, featureVector):
     fileVector = {}
@@ -61,7 +66,6 @@ def determine_KNN(doc, k_nearest_neighbour):
             elif neighbour_count[neighbour] == neighbour_count[catalog] \
                 and neighbour_similarity_sum[neighbour] > neighbour_similarity_sum[catalog]:
                     catalog = neighbour
-            
         
     return catalog
         
@@ -86,7 +90,7 @@ def get_accuracy(prediction):
         doc = get_catalog(doc)
         if doc == predicted_catalog:
             true_positive += 1
-    return float(true_positive)/float(len(prediction))
+    return true_positive, len(prediction), float(true_positive)/float(len(prediction))
     
 if __name__ == '__main__':
     testFileVectorFile = open('E:\\TextClassificationData\\test_content.txt', 'w')
