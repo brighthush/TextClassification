@@ -1,6 +1,8 @@
 # coding: GBK
 
-#data directory
+#file you will to read, you can change it to test
+test_file_number = 100
+
 #data_directory = 'E:\TextClassificationData\SogouC.mini\Sample'
 data_directory = 'E:\TextClassificationData\SogouC.reduced\Reduced'
 

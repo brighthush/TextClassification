@@ -1,6 +1,7 @@
 # coding: GBK
 
 import configuration
+import configuration
 import os
 import sys
 import jieba
@@ -60,7 +61,10 @@ def ReadDir(dirName, training=True):
                 text = ReadFile(dirName+'\\'+fileName)
                 fileContent[dirName+'\\'+fileName] = text
         file_cnt += 1
-        if file_cnt>100:
+        
+        if configuration.test_file_number == -1:
+            continue
+        if file_cnt>configuration.test_file_number:
             break
     return fileContent
 
