@@ -2,7 +2,7 @@
 import FeatureFiltering
 
 print 'began to filter features'
-featureVector = FeatureFiltering.getFeatures()
+featureVector = FeatureFiltering.global_features
 print 'finished fitering features'
 
 # calculate tf*idf value for every doc as the representation of doc vector

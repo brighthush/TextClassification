@@ -47,7 +47,8 @@ def wordStatistic():
                 else:
                     word_frequency[word] += 1
             doc_word_frequency[file] = word_frequency
-
+    
+    wordidf = {}
     for word in wordFrequency:
         wordidf[word] = math.log(float(docCount)/float(wordDocFrequency[word]), 2)
     wordidf = sorted(wordidf.items(), key=itemgetter(1), reverse=True)
@@ -70,6 +71,9 @@ def cal_IG(a, b, c, d, catalog_number):
     return IG
     
 def filter_feature_IG(text_content):
+
+    global global_catalog_word_pro
+
     catalog_word = {}
     doc_frequency = {}
     doc_number = 0
@@ -93,6 +97,7 @@ def filter_feature_IG(text_content):
                 else:
                     doc_frequency[word] = 1
         catalog_word[catalog] = word_frequency
+        
     
     word_IG = {}
     for catalog in catalog_word:
@@ -125,12 +130,15 @@ def getFeatures(topK=featureNum):
         if word not in feature:
             feature[word] = wordidf[word]
     return feature.items()
+
+global_features = getFeatures(featureNum)
+
     
 if __name__ == '__main__':
     features = getFeatures(featureNum)
     content = open('E:\\TextClassificationData\\content.txt', 'w')
-    wordidf = features
-    for word in wordidf:
+    temp_wordidf = features
+    for word in temp_wordidf:
         word, idf = word[0], word[1]
         content.write(word.encode('gbk')+' '+str(wordFrequency[word])+' '+str(wordDocFrequency[word])+' '+str(idf)+'\n')
 
