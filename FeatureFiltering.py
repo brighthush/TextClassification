@@ -54,6 +54,7 @@ def wordStatistic():
     
     return wordidf
 
+#calculate information gain for every word for each document
 def cal_IG(a, b, c, d, catalog_number):
     all = float(a + b + c +d)
     p_c = float(a+c)/all
@@ -116,10 +117,13 @@ def getFeatures(topK=featureNum):
     wordidf = wordStatistic()
     wordidf = dict(wordidf)
     word_IG = filter_feature_IG(fileToWords)
-    feature = {}
     
+    feature = {}
+    #feature = (wordidf.items())[0:topK]
+    #feature = dict(feature)
     for word, ig in word_IG[0:topK]:
-        feature[word] = wordidf[word]
+        if word not in feature:
+            feature[word] = wordidf[word]
     return feature.items()
     
 if __name__ == '__main__':

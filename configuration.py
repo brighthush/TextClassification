@@ -1,7 +1,7 @@
 # coding: GBK
 
 #file you will to read, you can change it to test
-test_file_number = 100
+test_file_number = 300
 
 #data_directory = 'E:\TextClassificationData\SogouC.mini\Sample'
 data_directory = 'E:\TextClassificationData\SogouC.reduced\Reduced'
