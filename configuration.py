@@ -4,7 +4,7 @@
 test_file_number = 300
 
 #data_directory = 'E:\TextClassificationData\SogouC.mini\Sample'
-data_directory = 'E:\TextClassificationData\SogouC.reduced\Reduced'
+data_directory = 'E:\TextClassificationData\Reduced'
 
 # training data directory
 training_data_directory = data_directory

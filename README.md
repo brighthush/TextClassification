@@ -1,7 +1,8 @@
-TextClassification
+﻿TextClassification
 ==================
 
-使用搜狗语料库进行文本分类实验
+使用搜狗语料库进行文本分类实验，此实验为《自然语言理解》课程的大作业。实验过程中使用了KNN和朴素贝叶斯方法进行分类学习，
+特征提取分别采用了TF-IDF和Information Gain的方法。
 
 ReadData.py：完成从文件中读取文本的功能，并且使用jieba模块进行分词，返回{catalog:{filename:[wordlist]}}这样的结构。
 
@@ -11,3 +12,7 @@ FeatureFiltering.py：对ReadData模块读入的训练数据进行词频、文�
 
 Training.py：计算每一个文档对应的tf*idf向量，返回结构为{docName: tf*idf vector, ...}。
 KNNPredict.py：使用KNN算法对文本类别进行预测，计算预测结果的准确率。
+
+
+author: BrightHush
+email:brighthush at sina dot com
