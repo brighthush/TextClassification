@@ -1,11 +1,13 @@
-# coding: GBK
+# coding=GBK
 import KNNPredict
 import Training
 import configuration
 
+def main():
+    pass
 
 if __name__ == '__main__':
-    testFileVectorFile = open('E:\\TextClassificationData\\test_content.txt', 'w')
+    testFileVectorFile = open('E:\\Github\\TextClassification\\conf\\test_content.txt', 'w')
     testFileVector = None
     
     print 'began to get testFileVector'

@@ -1,5 +1,4 @@
-# coding: GBK
-
+# coding=GBK
 import configuration
 import Training
 import ReadData
@@ -10,7 +9,8 @@ training_doc_vector = Training.getDocVector()
 print 'finished getting training_doc_vector'
 
 print 'began to get test_files_to_words'
-test_files_to_words = ReadData.ReadAllCatalogs(configuration.test_data_directory, False)
+test_files_to_words = ReadData.ReadAllCatalogs(\
+    configuration.test_data_directory, False)
 print 'finished getting test_files_to_words'
 
 def getDocVector(content, featureVector):

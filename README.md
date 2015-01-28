@@ -20,8 +20,9 @@ You can also get this module from [github](https://github.com/fxsjy/jieba).
 
 ## Naming Convention in Code
 * modeule_name, package_name, method_name, function_name, instance_var_name, function_parameter_name, local_var_name
+globa_var_name
 * ClassName, ExceptionName
-* GLOBAL_VAR_NAME
+* Constant GLOBAL_VAR_NAME
 * internal used element name should begin with "_"
 * internal used private element name should begin with "__"
 

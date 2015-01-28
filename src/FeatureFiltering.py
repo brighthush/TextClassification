@@ -47,12 +47,10 @@ def wordStatistic():
                 else:
                     word_frequency[word] += 1
             doc_word_frequency[file] = word_frequency
-    
     wordidf = {}
     for word in wordFrequency:
         wordidf[word] = math.log(float(docCount)/float(wordDocFrequency[word]), 2)
     wordidf = sorted(wordidf.items(), key=itemgetter(1), reverse=True)
-    
     return wordidf
 
 #calculate information gain for every word for each document
@@ -71,9 +69,7 @@ def cal_IG(a, b, c, d, catalog_number):
     return IG
     
 def filter_feature_IG(text_content):
-
     global global_catalog_word_pro
-
     catalog_word = {}
     doc_frequency = {}
     doc_number = 0
@@ -97,8 +93,6 @@ def filter_feature_IG(text_content):
                 else:
                     doc_frequency[word] = 1
         catalog_word[catalog] = word_frequency
-        
-    
     word_IG = {}
     for catalog in catalog_word:
         wordlist = catalog_word[catalog]
@@ -113,9 +107,28 @@ def filter_feature_IG(text_content):
                 word_IG[word] += IG
             else:
                 word_IG[word] = IG
-    
     word_IG = sorted(word_IG.items(), lambda x, y:cmp(x[1], y[1]), reverse=True)
     return word_IG
+
+
+# input line
+# line_name, dict of word bag, label
+def cal_entropy(input_rows):
+    label_cnt = {}
+    label_total = len(input_rows)
+    for row in input_rows:
+        label = input_rows[2]
+        if label not in label_cnt:
+            label_cnt[label] = 1
+        else:
+            label_cnt[label] += 1
+    prob = []
+    for label in label_cnt:
+        prob.append(float(label_cnt[label]) / float(label_total))
+    entr = 0
+    for p in prob:
+        entr += (p * math.log(p, 2.0))
+    return entr
     
     
 def getFeatures(topK=featureNum):
