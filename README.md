@@ -4,7 +4,8 @@
 @author: BrightHush
 @email: brighthush at sina dot com
 
-# English README.md
+# English README
+
 
 ## Project Introduction
 This is a python project for Chinese Text Classification. I finished this project as a homework of course 
@@ -14,11 +15,12 @@ In this experiment, I use the Sougou-Text-Classification open corpus.
 I used TF/IDF and Information Gain as feature extraction algorithm. As I'm lazy, I only implemented
 two simple classification algorithm, they are K-Nearest-Neighbour and Naive Bayes Classification.
 
+When extracting feature of text, We always need to segment sentences into words. I use Jieba to do word segmentation.
+You can also get this module from [github](https://github.com/fxsjy/jieba).
+
 ## File Content
 
-
-
-# 中文 README.md
+# 中文 README
 使用搜狗语料库进行文本分类实验，此实验为《自然语言理解》课程的大作业。实验过程中使用了KNN和朴素贝叶斯方法进行分类学习，
 特征提取分别采用了TF-IDF和Information Gain的方法。
 
