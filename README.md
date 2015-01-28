@@ -18,7 +18,15 @@ two simple classification algorithm, they are K-Nearest-Neighbour and Naive Baye
 When extracting feature of text, We always need to segment sentences into words. I use Jieba to do word segmentation.
 You can also get this module from [github](https://github.com/fxsjy/jieba).
 
-## File Content
+## Naming Convention in Code
+* modeule_name, package_name, method_name, function_name, instance_var_name, function_parameter_name, local_var_name
+* ClassName, ExceptionName
+* GLOBAL_VAR_NAME
+* internal used element name should begin with "_"
+* internal used private element name should begin with "__"
+
+## Project Structure
+
 
 # 中文 README
 使用搜狗语料库进行文本分类实验，此实验为《自然语言理解》课程的大作业。实验过程中使用了KNN和朴素贝叶斯方法进行分类学习，
