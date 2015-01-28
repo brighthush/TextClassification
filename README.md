@@ -1,6 +1,22 @@
 ﻿TextClassification
 ==================
 
+author: BrightHush
+email:brighthush at sina dot com
+
+# English README.md
+
+## Project Introduction
+This is a project for Chinese Text Classification. I finished this project as a homework of course 
+Natural Language Understanding. In this experiment, I use the Sougou-Text-Classification open corpus.
+I used TF/IDF and Information Gain as feature extraction algorithm. As I'm lazy, I only implemented
+two simple classification algorithm, they are K-Nearest-Neighbour and Naive Bayes Classification.
+
+## File Introduction
+
+
+
+# 中文 README.md
 使用搜狗语料库进行文本分类实验，此实验为《自然语言理解》课程的大作业。实验过程中使用了KNN和朴素贝叶斯方法进行分类学习，
 特征提取分别采用了TF-IDF和Information Gain的方法。
 
@@ -14,5 +30,4 @@ Training.py：计算每一个文档对应的tf*idf向量，返回结构为{docNa
 KNNPredict.py：使用KNN算法对文本类别进行预测，计算预测结果的准确率。
 
 
-author: BrightHush
-email:brighthush at sina dot com
+
