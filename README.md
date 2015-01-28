@@ -1,18 +1,20 @@
 ﻿TextClassification
 ==================
 
-author: BrightHush
-email:brighthush at sina dot com
+@author: BrightHush
+@email: brighthush at sina dot com
 
 # English README.md
 
 ## Project Introduction
-This is a project for Chinese Text Classification. I finished this project as a homework of course 
-Natural Language Understanding. In this experiment, I use the Sougou-Text-Classification open corpus.
+This is a python project for Chinese Text Classification. I finished this project as a homework of course 
+Natural Language Understanding. 
+
+In this experiment, I use the Sougou-Text-Classification open corpus.
 I used TF/IDF and Information Gain as feature extraction algorithm. As I'm lazy, I only implemented
 two simple classification algorithm, they are K-Nearest-Neighbour and Naive Bayes Classification.
 
-## File Introduction
+## File Content
 
 
 
