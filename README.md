@@ -1,8 +1,8 @@
 ﻿TextClassification
 ==================
 
-@author: BrightHush
-@email: brighthush at sina dot com
+@author: Bright Hush    
+@e-mail: brighthush at sina dot com
 
 # English README
 
