@@ -16,7 +16,7 @@ training_data_directory = data_directory
 test_data_directory = data_directory
 
 #the number of features you want to filtering to represent a document
-feature_number = 2000
+feature_number = 10
 
 # the number of neighbours you will use to predict a document
 top_k_number = 11

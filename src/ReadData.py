@@ -1,5 +1,4 @@
 # coding: GBK
-
 import configuration as conf
 import os
 import jieba
@@ -77,7 +76,7 @@ hw_cnt = 0
 labels = set()
 rows = []
 # row_name, dict of word bag, row_label
-def init_input_data(catalog):
+def init_train_data(catalog):
     print 'init_input_data ...'
     global word_hash # word str to number int
     global hash_word # word number to word str
@@ -125,8 +124,27 @@ def display_rows():
             if local_cnt >= 10:
                 break
 
+def init_test_data(test_data):
+    rows = []
+    for cat in test_data:
+        file_list = test_data[cat]
+        for file_name in file_list:
+            row = []
+            row.append(file_name)
+            word_bag = {}
+            for word in file_list[file_name]:
+                if word in word_hash:
+                    word = word_hash[word]
+                    if word in word_bag:
+                        word_bag[word] += 1
+                    else:
+                        word_bag[word] = 1
+            row.append(word_bag)
+            row.append(cat)
+            rows.append(row)
+    return rows
     
 if __name__ == '__main__':
     content = ReadAllCatalogs(conf.data_directory)
-    init_input_data(content)
+    init_train_data(content)
     display_rows()

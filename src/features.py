@@ -1,10 +1,8 @@
 # coding=GBK
-
 import configuration as conf
 import ReadData
 import math
 
-fileToWords = ReadData.ReadAllCatalogs(conf.training_data_directory)
 hash_word = ReadData.hash_word
 
 def cal_idf(input_rows):
@@ -18,8 +16,8 @@ def cal_idf(input_rows):
                 doc_frequence[word] += 1
     idfs = doc_frequence.items()
     idfs.sort(lambda x, y: cmp(x[1], y[1]))
-    for i in range(10):
-        print idfs[i][0], idfs[i][1], hash_word[idfs[i][0]]
+    #for i in range(10):
+    #    print idfs[i][0], idfs[i][1], hash_word[idfs[i][0]]
     return idfs
 
 # input line
@@ -72,21 +70,46 @@ def get_features(feature_num, input_rows, words, labels):
     features = []
     for fea in feature_set:
         features.append(fea)
-    print 'feature dimision is %d' %(len(features))
-    for fea in features:
-        print hash_word[fea]
+    #print 'feature dimision is %d' %(len(features))
+    #for fea in features:
+    #    print hash_word[fea]
     return features
 
-def main():
-    global fileToWords
-    rows, word_hash, hash_word, hw_cnt, labels = ReadData.init_input_data(fileToWords)
-    #word_entropy(rows, hash_word, labels)
-    #cal_idf(rows)
-    features = get_features(10, rows, hash_word, labels)
-    return features
+def add_feature(input_rows, features):
+    for row in input_rows:
+        feas = []
+        for fea in features:
+            if fea in row[1]:
+                feas.append(row[1][fea])
+            else:
+                feas.append(0)
+        row.append(feas)
+    return input_rows
+
+def prepare_data(data_path):
+    train_data = ReadData.ReadAllCatalogs(data_path)
+    test_data = ReadData.ReadAllCatalogs(data_path, False)
+    rows, word_hash, hash_word, hw_cnt, labels = ReadData.init_train_data(train_data)
+    test_rows = ReadData.init_test_data(test_data)
+    features = get_features(conf.feature_number, rows, hash_word, labels)
+    rows = add_feature(rows, features)
+    test_rows = add_feature(test_rows, features)
+    return rows, test_rows, features
+
+# file_name, dict of word bag, file cat, features
+def display_rows(rows, features):
+    for row in rows:
+        print row[0], row[2]
+        for i in range(len(features)):
+            print '\t %s:%d' %(hash_word[features[i]], row[3][i]),
+    print '\n'
     
 if __name__ == '__main__':
-    main()
+    train_rows, test_rows, features = prepare_data(conf.data_directory)
+    print 'display train_rows ...'    
+    display_rows(train_rows, features)
+    print 'display test_rows ...'
+    display_rows(test_rows, features)
     
     #features = getFeatures(featureNum)
     #content = open('E:\\TextClassificationData\\content.txt', 'w')
