@@ -23,3 +23,6 @@ top_k_number = 11
 
 # the stop words file
 stopwords_file = 'E:\\Github\\TextClassification\\conf\\StopWords.txt'
+
+idf_flag = True
+ig_flag = True

@@ -6,6 +6,7 @@ import jieba
 
 # read stopword from stopwords.txt
 def ReadStopWords(path):
+    print 'begin to read sotp_words from %s' %(path)
     f = open(path, 'r')
     stop_words = set()
     for line in f.readlines():
@@ -13,6 +14,7 @@ def ReadStopWords(path):
         line = line.decode('gbk', 'ignore')
         stop_words.add(line)
     f.close()
+    print 'finished read stop_words'
     return stop_words
 
 
@@ -72,13 +74,16 @@ def ReadAllCatalogs(path, training=True):
 word_hash = {}
 hash_word = []
 hw_cnt = 0
-rows = [] # row_name, dict of word bag, row_label
+labels = set()
+rows = []
+# row_name, dict of word bag, row_label
 def init_input_data(catalog):
     print 'init_input_data ...'
-    global word_hash 
-    global hash_word
-    global hw_cnt
-    global rows
+    global word_hash # word str to number int
+    global hash_word # word number to word str
+    global hw_cnt # number of different words
+    global labels # label set
+    global rows # every line contains : row_name, dict of word bag, row_label
     for cat in catalog:
         file_list = catalog[cat]
         for file_name in file_list:
@@ -98,7 +103,9 @@ def init_input_data(catalog):
                     word_bag[wh_value] += 1
             row.append(word_bag)
             row.append(cat)
+            labels.add(cat)
             rows.append(row)
+    return rows, word_hash, hash_word, hw_cnt, labels
 
 def display_rows():
     global word_hash
