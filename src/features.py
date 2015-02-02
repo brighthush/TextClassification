@@ -1,9 +1,9 @@
 # coding=GBK
 import configuration as conf
-import ReadData
+import read_data as rd
 import math
 
-hash_word = ReadData.hash_word
+hash_word = rd.hash_word
 
 def cal_idf(input_rows):
     doc_frequence = {}
@@ -59,8 +59,11 @@ def word_entropy(input_rows, words, labels):
     
 def get_features(feature_num, input_rows, words, labels):
     feature_set = set()
+    idfs = cal_idf(input_rows)
+    word_idf = [0] * len(input_rows)
+    for idf in idfs:
+        word_idf[idf[0]] = idf[1]
     if conf.idf_flag:
-        idfs = cal_idf(input_rows)
         for i in range(min(feature_num, len(idfs))):
             feature_set.add(idfs[i][0])
     if conf.ig_flag:
@@ -68,12 +71,14 @@ def get_features(feature_num, input_rows, words, labels):
         for i in range(min(feature_num, len(igs))):
             feature_set.add(igs[i][0])
     features = []
+    features_weight = []
     for fea in feature_set:
         features.append(fea)
+        features_weight.append(word_idf[fea])
     #print 'feature dimision is %d' %(len(features))
     #for fea in features:
     #    print hash_word[fea]
-    return features
+    return features, features_weight
 
 def add_feature(input_rows, features):
     for row in input_rows:
@@ -87,14 +92,14 @@ def add_feature(input_rows, features):
     return input_rows
 
 def prepare_data(data_path):
-    train_data = ReadData.ReadAllCatalogs(data_path)
-    test_data = ReadData.ReadAllCatalogs(data_path, False)
-    rows, word_hash, hash_word, hw_cnt, labels = ReadData.init_train_data(train_data)
-    test_rows = ReadData.init_test_data(test_data)
-    features = get_features(conf.feature_number, rows, hash_word, labels)
+    train_data = rd.read_catalogs(data_path)
+    test_data = rd.read_catalogs(data_path, False)
+    rows, word_hash, hash_word, hw_cnt, labels = rd.init_train_data(train_data)
+    test_rows = rd.init_test_data(test_data)
+    features, features_weight = get_features(conf.feature_number, rows, hash_word, labels)
     rows = add_feature(rows, features)
     test_rows = add_feature(test_rows, features)
-    return rows, test_rows, features
+    return rows, test_rows, features, features_weight
 
 # file_name, dict of word bag, file cat, features
 def display_rows(rows, features):
@@ -103,13 +108,22 @@ def display_rows(rows, features):
         for i in range(len(features)):
             print '\t %s:%d' %(hash_word[features[i]], row[3][i]),
     print '\n'
+
+def normalize(vec):
+    val_sum = .0
+    for val in vec:
+        val_sum += (val * val)
+    val_sum_sqrt = math.sqrt(val_sum)
+    for i in range(len(vec)):
+        vec[i] /= val_sum_sqrt
+    return vec
     
 if __name__ == '__main__':
-    train_rows, test_rows, features = prepare_data(conf.data_directory)
+    train_rows, test_rows, feas, feas_weight = prepare_data(conf.data_directory)
     print 'display train_rows ...'    
-    display_rows(train_rows, features)
+    display_rows(train_rows, feas)
     print 'display test_rows ...'
-    display_rows(test_rows, features)
+    display_rows(test_rows, feas)
     
     #features = getFeatures(featureNum)
     #content = open('E:\\TextClassificationData\\content.txt', 'w')

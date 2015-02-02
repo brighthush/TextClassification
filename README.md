@@ -1,8 +1,8 @@
 ﻿TextClassification
 ==================
 
-@author: Bright Hush    
-@e-mail: brighthush at sina dot com
+@Author: Bright Hush    
+@Email: brighthush at sina dot com
 
 # English README
 
@@ -26,7 +26,11 @@ globa_var_name
 * internal used element name should begin with "_"
 * internal used private element name should begin with "__"
 
-## Project Structure
+## File and Function introduction
+### read_data.py
+
+### features.py
+
 
 
 # 中文 README

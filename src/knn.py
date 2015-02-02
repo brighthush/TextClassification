@@ -1,8 +1,10 @@
 # coding=GBK
-import configuration
-import Training
-import ReadData
+import configuration as conf
+import features as feas
 import math
+
+train_rows, test_rows, fea_list, fea_weight = feas.prepare_data(conf.data_directory)
+
 
 print 'began to get training_doc_vector'
 training_doc_vector = Training.getDocVector()

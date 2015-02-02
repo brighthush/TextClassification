@@ -4,7 +4,7 @@ import os
 import jieba
 
 # read stopword from stopwords.txt
-def ReadStopWords(path):
+def read_stopwords(path):
     print 'begin to read sotp_words from %s' %(path)
     f = open(path, 'r')
     stop_words = set()
@@ -18,13 +18,13 @@ def ReadStopWords(path):
 
 
 # read stop words from StopWords.txt
-stopWords = ReadStopWords(conf.stopwords_file)
+stopWords = read_stopwords(conf.stopwords_file)
 print 'finished read stopwords ...'
 
 
 # read file content from file which is named fileName, 
 # then using jieba to do word segmentation
-def ReadFile(fileName):
+def read_file(fileName):
     f = open(fileName, 'r')
     text = f.read()
     text = text.decode('gbk', 'ignore')
@@ -39,7 +39,7 @@ def ReadFile(fileName):
 
 
 #read all files in directory named by dirName
-def ReadDir(dir_name, training=True):
+def read_dir(dir_name, training=True):
     file_content = {}
     file_cnt = 0
     file_list = os.listdir(dir_name)
@@ -47,11 +47,11 @@ def ReadDir(dir_name, training=True):
         t = int(file_name.split('.')[0])
         if training:
             if t%10!=0:
-                text = ReadFile(dir_name+'\\'+file_name)
+                text = read_file(dir_name+'\\'+file_name)
                 file_content[dir_name+'\\'+file_name] = text
         else:
             if t%10==0:
-                text = ReadFile(dir_name+'\\'+file_name)
+                text = read_file(dir_name+'\\'+file_name)
                 file_content[dir_name+'\\'+file_name] = text
         file_cnt += 1
         
@@ -63,11 +63,11 @@ def ReadDir(dir_name, training=True):
 
 
 # read all catalogs in directory named path
-def ReadAllCatalogs(path, training=True):
+def read_catalogs(path, training=True):
     cataloglist = os.listdir(path)
     catalog = {}
     for name in cataloglist:
-        catalog[name] = ReadDir(path+'\\'+name, training)
+        catalog[name] = read_dir(path+'\\'+name, training)
     return catalog
 
 word_hash = {}
@@ -145,6 +145,6 @@ def init_test_data(test_data):
     return rows
     
 if __name__ == '__main__':
-    content = ReadAllCatalogs(conf.data_directory)
+    content = read_catalogs(conf.data_directory)
     init_train_data(content)
     display_rows()
