@@ -1,111 +1,72 @@
 # coding=GBK
 import configuration as conf
 import features as feas
-import math
+from topk import topk
 
 train_rows, test_rows, fea_list, fea_weight = feas.prepare_data(conf.data_directory)
 
-
-print 'began to get training_doc_vector'
-training_doc_vector = Training.getDocVector()
-print 'finished getting training_doc_vector'
-
-print 'began to get test_files_to_words'
-test_files_to_words = ReadData.ReadAllCatalogs(\
-    configuration.test_data_directory, False)
-print 'finished getting test_files_to_words'
-
-def getDocVector(content, featureVector):
-    fileVector = {}
-    for catalog in content:
-        catalog = content[catalog]
-        for doc in catalog:
-            wordlist = catalog[doc]
-            vector = []
-            for feature in featureVector:
-                vector.append(wordlist.count(feature[0])*feature[1])
-            fileVector[doc] = vector
-    return fileVector
+def data_normalize():
+    for row in train_rows:
+        row[3] = feas.normalize(row[3])
+    for row in test_rows:
+        row[3] = feas.normalize(row[3])
 
 def similarity(vectora, vectorb):
-    ans = 0
-    a = 0
-    b = 0
+    sim = 0
     for i in xrange(len(vectora)):
-        ans += vectora[i]*vectorb[i]
-        a += vectora[i]**2
-        b += vectorb[i]**2
-    if a*b == 0:
-        return 0
-    else:
-        ans /= math.sqrt(a*b)
-        return ans
-        
-def get_catalog(file_name):
-    word_list = file_name.split('\\')
-    return word_list[-2]
-        
-#determine one document by its K nearest neighbour
-def determine_KNN(doc, k_nearest_neighbour):
-    neighbour_count = {}
-    neighbour_similarity_sum = {}
-    for neighbour, value in k_nearest_neighbour:
-        if value>0:
-            neighbour = get_catalog(neighbour)
-            if neighbour in neighbour_count:
-                neighbour_count[neighbour] += 1
-                neighbour_similarity_sum[neighbour] += value
-            else:
-                neighbour_count[neighbour] = 1
-                neighbour_similarity_sum[neighbour] = value
-    catalog = None
-    for neighbour in neighbour_count:
-        if catalog == None:
-            catalog = neighbour
-        else:
-            if neighbour_count[neighbour] > neighbour_count[catalog]:
-                catalog = neighbour
-            elif neighbour_count[neighbour] == neighbour_count[catalog] \
-                and neighbour_similarity_sum[neighbour] > neighbour_similarity_sum[catalog]:
-                    catalog = neighbour
-        
-    return catalog
-        
-#get a list with K documents in the formate [(fileName, similarity value),...]
-def KNN(trainVector, testVector, K=11):
-    result = {}
-    prediction = {}
-    for testDoc in testVector:
-        similarityVector = {}
-        for trainDoc in trainVector:
-            similarityVector[trainDoc] = similarity(testVector[testDoc], trainVector[trainDoc])
-        result[testDoc] = similarityVector
-        similarityVector = sorted(similarityVector.items(), lambda x, y:cmp(x[1], y[1]), reverse=True)
-        result[testDoc] = similarityVector[0:K]
-        prediction[testDoc] = determine_KNN(testDoc, result[testDoc])
-    return result, prediction
+        sim += vectora[i]*vectorb[i]
+    return sim
 
-def get_accuracy(prediction):
-    true_positive = 0
-    for doc in prediction:
-        predicted_catalog = prediction[doc]
-        doc = get_catalog(doc)
-        if doc == predicted_catalog:
-            true_positive += 1
-    return true_positive, len(prediction), float(true_positive)/float(len(prediction))
-    
+def topk_sim(input_vec, k_value):
+    neighbours = []
+    for row in train_rows:
+        sim = similarity(input_vec, row[3])
+        neighbours.append((row, sim))
+        #neighbours.append((row[2], sim))
+    neigh_topk = topk(neighbours, k_value, True)
+    #neigh_topk = neighbours
+    for neigh in neigh_topk:
+        row = neigh[0]
+        sim = neigh[1]
+        print row[2], sim
+    return neigh_topk
+
+def choose_label(neigh_topk):
+    labels_cnt = {}
+    labels_sim = {}
+    for neigh in neigh_topk:
+        row = neigh[0]
+        sim = neigh[1]
+        label = row[2]
+        if label not in labels_cnt:
+            labels_cnt[label] = 0
+            labels_sim[label] = 0
+        labels_cnt[label] += 1
+        labels_sim[label] += sim
+    target_cnt = 0
+    target_sim = 0
+    target = -1
+    for label in labels_cnt:
+        if labels_cnt[label] > target_cnt:
+            target = label
+            target_cnt = labels_cnt[label]
+            target_sim = labels_sim[label]
+        elif labels_cnt[label] == target_cnt:
+            if labels_sim[label] > target_sim:
+                target = label
+                target_sim = labels_sim[label]
+    return target, target_cnt, target_sim
+
+def knn_predict(input_data, k_value):
+    for row in input_data:
+        input_vec = row[3]
+        neigh_topk = topk_sim(input_vec, k_value)
+        target, target_cnt, target_sim = choose_label(neigh_topk)
+        row.append(('knn_predict', target))
+        print row[0], row[2], 'knn_predict :', target
+    return input_data
+
 if __name__ == '__main__':
-    testFileVectorFile = open('E:\\TextClassificationData\\test_content.txt', 'w')
-    testFileVector = None
-    testFileVector = getDocVector(test_files_to_words, Training.featureVector)
+    data_normalize()
+    knn_out = knn_predict(test_rows, conf.knn_k)
     
-    result, prediction = KNN(training_doc_vector, testFileVector, configuration.top_k_number)
-    accuracy = get_accuracy(prediction)
-    testFileVectorFile.write('accuracy:%.6lf'%(accuracy)+'\n')
-    for doc in result:
-        testFileVectorFile.write(doc.encode('gbk')+' '+prediction[doc].encode('gbk')+'\n')
-        vector = result[doc]
-        for neighbor in vector:
-            testFileVectorFile.write('    '+neighbor[0].encode('gbk')+'\n')
-            testFileVectorFile.write('    '+str(neighbor[1])+'\n')
-    testFileVectorFile.close()

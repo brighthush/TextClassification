@@ -5,24 +5,42 @@ Created on Mon Feb 02 15:33:01 2015
 @author: Bright Hush
 """
 
+import random
+#import sys
+
+#sys.setrecursionlimit(10000)
+
 # item is (key, value)
 def kselect(items, k):
+    print 'in kselect, %d %d ' %(len(items), k)    
+    if k <= 0:
+        return []
+    #print items
     if len(items) <= k:
         return items
-    pivot = items[k][1]
+    index = random.randint(0, len(items) - 1)    
+    pivot = items[index][1]
     right = []
     left = []
+    eq = []
     for item in items:
-        if item[1] >= pivot:
+        if item[1] > pivot:
             right.append(item)
+        elif item[1] == pivot:
+            eq.append(item)
         else:
             left.append(item)
-    if len(right) == k:
-        return right
-    elif len(right) > k:
+    if len(right) > k:
         return kselect(right, k)
+    elif len(right) == k:
+        return right
+    elif len(right) + len(eq) >=k:
+        for i in range(k-len(right)):
+            right.append(eq[i])
+        return right
     else:
-        return right + kselect(left, k-len(right))
+        right += eq
+        return right + kselect(left, k - len(right))
         
 def topk(items, k, ordered=False):
     topk_items = kselect(items, k)

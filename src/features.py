@@ -60,7 +60,7 @@ def word_entropy(input_rows, words, labels):
 def get_features(feature_num, input_rows, words, labels):
     feature_set = set()
     idfs = cal_idf(input_rows)
-    word_idf = [0] * len(input_rows)
+    word_idf = [0] * len(idfs)
     for idf in idfs:
         word_idf[idf[0]] = idf[1]
     if conf.idf_flag:

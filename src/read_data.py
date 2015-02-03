@@ -18,7 +18,7 @@ def read_stopwords(path):
 
 
 # read stop words from StopWords.txt
-stopWords = read_stopwords(conf.stopwords_file)
+stopwords = read_stopwords(conf.stopwords_file)
 print 'finished read stopwords ...'
 
 
@@ -33,7 +33,7 @@ def read_file(fileName):
     wordlist = jieba.cut(text, cut_all=False)
     text = []
     for word in wordlist:
-        if word not in stopWords:
+        if word not in stopwords:
             text.append(word)
     return text
 
