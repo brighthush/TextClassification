@@ -30,11 +30,12 @@ globa_var_name
 ### Data for training and testing  
 These data are sotred in train_rows and test_rows. The format of each row is described 
 below.  
-> [row_name, dict of word bag, row_label, feature_list]  
+[row_name, dict of word bag, row_label, feature_list]  
 > row_name :  
 > dict of word bag: this contains word count for each word as dict in python  
 > row_label : the class of this row  
 > feature_list : This is a list, each element is the value corresponding to each feature  
+
 ### vocabulary information  
 word_hash : map each word to a int value  
 hash_word : this is a list, which correponding to the word_hash  

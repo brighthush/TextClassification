@@ -113,6 +113,8 @@ def normalize(vec):
     val_sum = .0
     for val in vec:
         val_sum += (val * val)
+    if val_sum == 0:
+        return vec
     val_sum_sqrt = math.sqrt(val_sum)
     for i in range(len(vec)):
         vec[i] /= val_sum_sqrt
