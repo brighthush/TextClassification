@@ -11,11 +11,9 @@ import random
 #sys.setrecursionlimit(10000)
 
 # item is (key, value)
-def kselect(items, k):
-    print 'in kselect, %d %d ' %(len(items), k)    
+def kselect(items, k):    
     if k <= 0:
         return []
-    #print items
     if len(items) <= k:
         return items
     index = random.randint(0, len(items) - 1)    

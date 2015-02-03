@@ -19,8 +19,6 @@ def read_stopwords(path):
 
 # read stop words from StopWords.txt
 stopwords = read_stopwords(conf.stopwords_file)
-print 'finished read stopwords ...'
-
 
 # read file content from file which is named fileName, 
 # then using jieba to do word segmentation

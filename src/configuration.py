@@ -6,8 +6,8 @@ This is a configuration file, you can set value for these variables.
 #file you will to read, you can change it to test
 test_file_number = 300
 
-data_directory = 'E:\\ExperimentData\\TextClassification\\SogouC.mini\\Sample'
-#data_directory = 'E:\TextClassificationData\Reduced'
+#data_directory = 'E:\\ExperimentData\\TextClassification\\SogouC.mini\\Sample'
+data_directory = 'E:\\ExperimentData\\TextClassification\\SogouC.reduced\\Reduced'
 
 # training data directory
 training_data_directory = data_directory
@@ -16,7 +16,7 @@ training_data_directory = data_directory
 test_data_directory = data_directory
 
 #the number of features you want to filtering to represent a document
-feature_number = 100
+feature_number = 3000
 
 # the number of neighbours you will use to predict a document
 top_k_number = 11

@@ -8,8 +8,12 @@ train_rows, test_rows, fea_list, fea_weight = feas.prepare_data(conf.data_direct
 def data_normalize():
     for row in train_rows:
         row[3] = feas.normalize(row[3])
+        #for i in range(len(row[3])):
+        #    row[3][i] *= fea_weight[i]
     for row in test_rows:
         row[3] = feas.normalize(row[3])
+        #for i in range(len(row[3])):
+        #    row[3][i] *= fea_weight[i]
 
 def similarity(vectora, vectorb):
     sim = 0
@@ -28,7 +32,7 @@ def topk_sim(input_vec, k_value):
     for neigh in neigh_topk:
         row = neigh[0]
         sim = neigh[1]
-        print row[2], sim
+        #print row[2], sim
     return neigh_topk
 
 def choose_label(neigh_topk):
@@ -66,7 +70,22 @@ def knn_predict(input_data, k_value):
         print row[0], row[2], 'knn_predict :', target
     return input_data
 
+def cal_precision(label, label_pred):
+    if len(label) != len(label_pred):
+        print 'label and label_pred with different length.'
+        exit()
+    right = 0
+    for i in range(len(label)):
+        if label[i] == label_pred[i]:
+            right += 1
+    right = 1.0 * right / float(len(label))
+    return right
+
 if __name__ == '__main__':
     data_normalize()
     knn_out = knn_predict(test_rows, conf.knn_k)
+    labels = [ row[2] for row in knn_out ]
+    labels_pred = [ row[-1][1] for row in knn_out ]
+    precision = cal_precision(labels, labels_pred)
+    print 'knn predication precision : %lf' %(precision)
     

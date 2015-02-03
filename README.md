@@ -36,7 +36,7 @@ below.
 > row_label : the class of this row  
 > feature_list : This is a list, each element is the value corresponding to each feature  
 
-### vocabulary information  
+### Vocabulary Information  
 word_hash : map each word to a int value  
 hash_word : this is a list, which correponding to the word_hash  
 hw_cnt : the size of hash_word which means the number of different words  

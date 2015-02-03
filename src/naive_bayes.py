@@ -1,95 +1,74 @@
 # coding: GBK
 
+import configuration as conf
+import features as feas
+from knn import cal_precision
 import math
-import FeatureFiltering
-import KNNPredict
 
-training_doc_to_word = FeatureFiltering.fileToWords
-test_doc_to_word = KNNPredict.test_files_to_words
-features = FeatureFiltering.global_features
-catalog_p = {}
-catalog_word_p = {}
+train_rows, test_rows, fea_list, fea_weight = feas.prepare_data(conf.data_directory)
 
-def cal_catalog_word_pro(training_content, features):
-    
-    global catalog_p
-    global catalog_word_p
-    
-    for catalog in training_content:
-        docdict = training_content[catalog]
+nb_label_cnt = {}
+nb_label_prob = {}
+
+# p(y|x) = p(x|y)p(y) / p(x) = p(x1|y)p(x2|y)...p(y) / p(x)
+def nb_train(train_data):
+    print 'train naive bayes model ...'
+    global nb_label_cnt
+    global nb_label_prob
+    for row in train_data:
+        label = row[2]
+        if label not in nb_label_cnt:
+            nb_label_cnt[label] = 0
+            nb_label_prob[label] = [0] * len(fea_list)
+        nb_label_cnt[label] += 1
+        for i in range(len(row[3])):
+            if row[3][i] > 0:
+                nb_label_prob[label][i] += 1
+    for label in nb_label_cnt:
+        label_cnt = nb_label_cnt[label]
+        label_prob = nb_label_prob[label]
+        for i in range(len(label_prob)):
+            if label_prob[i] == 0:
+                continue
+            label_prob[i] = 1.0 * label_prob[i] / float(label_cnt)
+            label_prob[i] = math.log(label_prob[i], 2.0)
+    print 'finished train naive bayes model.'
+    return nb_label_cnt, nb_label_prob
+
+def cal_label_prob(vec, label):
+    log_p = 0
+    for i in range(len(vec)):
+        if vec[i] > 0:
+            log_p += nb_label_prob[label][i]
+    return log_p
+
+def nb_predict(input_data):
+    global nb_label_cnt
+    global nb_label_prob
+    for row in input_data:
+        vec = row[3]
+        target = None
+        target_log_p = 0
+        for label in nb_label_cnt:
+            log_p = cal_label_prob(vec, label)
+            if target == None:
+                target = label
+                target_log_p = log_p
+            else:
+                if target_log_p < log_p:
+                    target_log_p = log_p
+                    target = label
+        row.append(('nb_predict', target))
+        print row[0], ' : ', target
+    return row
+
+def main():
+    nb_train(train_rows)
+    nb_predict(test_rows)
+    labels = [row[2] for row in test_rows]
+    labels_pred = [row[4][1] for row in test_rows]
+    precision = cal_precision(labels, labels_pred)
+    print 'naive bayes predication precision : %lf' %(precision)
         
-        value = float(1+len(docdict))/float(len(training_content)+FeatureFiltering.docCount)
-        value = math.log(value)
-        catalog_p[catalog] = value
-        
-        word_p = {}
-        for word, value in features:
-            doc_cnt = 0
-            for doc in docdict:
-                if word in docdict[doc]:
-                    doc_cnt += 1
-            word_p[word] = float(doc_cnt+1)/float(FeatureFiltering.wordDocFrequency[word]+len(training_content))
-            word_p[word] = math.log(word_p[word])
-        
-        catalog_word_p[catalog] = word_p
-    return catalog_word_p
-
-def get_predicted_catalog(nb_prediction):
-
-    catalog_predicted = {}
-    for doc in nb_prediction:
-        catalog_pro = nb_prediction[doc]
-        predicted_ans = None
-        for catalog in catalog_pro:
-            if predicted_ans == None:
-                predicted_ans = catalog
-            elif catalog_pro[catalog] > catalog_pro[predicted_ans]:
-                predicted_ans = catalog
-        catalog_predicted[doc] = predicted_ans
-    return catalog_predicted
-
-def predict_nb(test_content, features):
-
-    print 'begin cal_catalog_word_pro'
-    cal_catalog_word_pro(training_doc_to_word, features)
-    print 'finished cal_catalog_word_pro'
-    
-    global catalog_p
-    global catalog_word_p
-    
-    print 'begin predicting by naive bayes'
-    nb_prediction = {}
-    
-    for catalog in test_content:
-        doclist = test_content[catalog]
-        for doc in doclist:
-            print 'test doc: '+doc.encode('gbk')+'\n'
-            
-            doc_catalog_pro = {}
-            wordlist = doclist[doc]
-            
-            for catalog_try in catalog_p:
-                likely = catalog_p[catalog_try]
-                for word, value in features:
-                    if word in wordlist:
-                        likely += catalog_word_p[catalog_try][word]
-                doc_catalog_pro[catalog_try] = likely
-            
-            nb_prediction[doc] = doc_catalog_pro
-    
-    catalog_predicted = get_predicted_catalog(nb_prediction)
-    return catalog_predicted
-
-
 if __name__ == '__main__':
-    ans = predict_nb(test_doc_to_word, FeatureFiltering.global_features)
-    print 'finished predicted by naive bayes'
-    true_positive, predicted_num, accuracy = KNNPredict.get_accuracy(ans)
-    file = open('E:\\TextClassificationData\\nb_content.txt', 'w')
-    file.write('true_positive, predicted_num, accuracy, %d %d %6lf \n' \
-    %(true_positive, predicted_num, accuracy))
-    for doc in ans:
-        file.write(doc.encode('gbk')+'\n')
-        file.write('    '+ans[doc].encode('gbk')+'\n')
-    file.close()
-    
+    main()    
