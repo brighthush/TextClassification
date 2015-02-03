@@ -30,18 +30,18 @@ globa_var_name
 ### Data for training and testing  
 These data are sotred in train_rows and test_rows. The format of each row is described 
 below.  
-[row_name, dict of word bag, row_label, feature_list]  
+[row_name, dict of word bag, row_label, feature_list, pred_tuple, ...]  
 > row_name :  
 > dict of word bag: this contains word count for each word as dict in python  
 > row_label : the class of this row  
 > feature_list : This is a list, each element is the value corresponding to each feature  
+> pred_tuple : which indicate the predication of each algorithm. For example (knn_pred, label) means that knn give the predicated out is label.
 
 ### Vocabulary Information  
 word_hash : map each word to a int value  
 hash_word : this is a list, which correponding to the word_hash  
 hw_cnt : the size of hash_word which means the number of different words  
 labels: this is a set, which stores the different labels in this train data  
-
 
 
 ## File and Function introduction
