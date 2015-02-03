@@ -1,11 +1,14 @@
 # coding: GBK
 
-import configuration as conf
-import features as feas
-from knn import cal_precision
+import knn
 import math
 
-train_rows, test_rows, fea_list, fea_weight = feas.prepare_data(conf.data_directory)
+cal_precision = knn.cal_precision
+
+train_rows = knn.train_rows
+test_rows = knn.test_rows
+fea_list = knn.fea_list
+fea_weight = knn.fea_weight
 
 nb_label_cnt = {}
 nb_label_prob = {}
@@ -18,7 +21,7 @@ def nb_train(train_data):
     for row in train_data:
         label = row[2]
         if label not in nb_label_cnt:
-            nb_label_cnt[label] = 0
+            nb_label_cnt[label] = 1
             nb_label_prob[label] = [0] * len(fea_list)
         nb_label_cnt[label] += 1
         for i in range(len(row[3])):
@@ -29,7 +32,7 @@ def nb_train(train_data):
         label_prob = nb_label_prob[label]
         for i in range(len(label_prob)):
             if label_prob[i] == 0:
-                continue
+                label_prob[i] = 0.01
             label_prob[i] = 1.0 * label_prob[i] / float(label_cnt)
             label_prob[i] = math.log(label_prob[i], 2.0)
     print 'finished train naive bayes model.'

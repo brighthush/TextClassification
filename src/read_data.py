@@ -35,22 +35,32 @@ def read_file(fileName):
             text.append(word)
     return text
 
-
+train_file_cnt = 0
+test_file_cnt = 0
 #read all files in directory named by dirName
 def read_dir(dir_name, training=True):
+    global train_file_cnt
+    global test_file_cnt
     file_content = {}
     file_cnt = 0
     file_list = os.listdir(dir_name)
     for file_name in file_list:
         t = int(file_name.split('.')[0])
+        file_path = dir_name + '\\' + file_name
         if training:
             if t%10!=0:
-                text = read_file(dir_name+'\\'+file_name)
-                file_content[dir_name+'\\'+file_name] = text
+                text = read_file(file_path)
+                file_content[file_path] = text
+                train_file_cnt += 1
+                if train_file_cnt % 100 == 0:
+                    print '\thave read %d train_file_cnt' %(train_file_cnt)
         else:
             if t%10==0:
-                text = read_file(dir_name+'\\'+file_name)
-                file_content[dir_name+'\\'+file_name] = text
+                text = read_file(file_path)
+                file_content[file_path] = text
+                test_file_cnt += 1
+                if test_file_cnt % 20 == 0:
+                    print '\thave read %d test_file_cnt' %(test_file_cnt)
         file_cnt += 1
         
         if conf.test_file_number == -1:
@@ -75,7 +85,7 @@ labels = set()
 rows = []
 # row_name, dict of word bag, row_label
 def init_train_data(catalog):
-    print 'init_input_data ...'
+    print 'init_train_data ...'
     global word_hash # word str to number int
     global hash_word # word number to word str
     global hw_cnt # number of different words
@@ -102,6 +112,7 @@ def init_train_data(catalog):
             row.append(cat)
             labels.add(cat)
             rows.append(row)
+    print 'finished init_train_data.'
     return rows, word_hash, hash_word, hw_cnt, labels
 
 def display_rows():
@@ -123,6 +134,7 @@ def display_rows():
                 break
 
 def init_test_data(test_data):
+    print 'init_test_data ...'
     rows = []
     for cat in test_data:
         file_list = test_data[cat]
@@ -140,6 +152,7 @@ def init_test_data(test_data):
             row.append(word_bag)
             row.append(cat)
             rows.append(row)
+    print 'finished init_test_data.'
     return rows
     
 if __name__ == '__main__':

@@ -58,15 +58,18 @@ def word_entropy(input_rows, words, labels):
     return entrs
     
 def get_features(feature_num, input_rows, words, labels):
+    print 'begin to get_features.'
     feature_set = set()
     idfs = cal_idf(input_rows)
     word_idf = [0] * len(idfs)
     for idf in idfs:
         word_idf[idf[0]] = idf[1]
     if conf.idf_flag:
+        print '\t add words with top idf as features.'
         for i in range(min(feature_num, len(idfs))):
             feature_set.add(idfs[i][0])
     if conf.ig_flag:
+        print '\t add words with top information-gain as features.'
         igs = word_entropy(input_rows, words, labels)
         for i in range(min(feature_num, len(igs))):
             feature_set.add(igs[i][0])
@@ -75,12 +78,14 @@ def get_features(feature_num, input_rows, words, labels):
     for fea in feature_set:
         features.append(fea)
         features_weight.append(word_idf[fea])
+    print 'finished get_features.'
     #print 'feature dimision is %d' %(len(features))
     #for fea in features:
     #    print hash_word[fea]
     return features, features_weight
 
 def add_feature(input_rows, features):
+    print 'add word(feature) count to input_rows...'
     for row in input_rows:
         feas = []
         for fea in features:
@@ -89,6 +94,7 @@ def add_feature(input_rows, features):
             else:
                 feas.append(0)
         row.append(feas)
+    print 'finished add_feature'
     return input_rows
 
 def prepare_data(data_path):
