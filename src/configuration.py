@@ -3,17 +3,12 @@
 This is a configuration file, you can set value for these variables.
 '''
 
-#file you will to read, you can change it to test
-test_file_number = 300
+# file you will to read for test phrase, -1 means you don't limit the number of 
+# test files.
+test_file_number = -1
 
 #data_directory = 'E:\\ExperimentData\\TextClassification\\SogouC.mini\\Sample'
-data_directory = 'E:\\ExperimentData\\TextClassification\\SogouC.reduced\\Reduced'
-
-# training data directory
-training_data_directory = data_directory
-
-# test data directory
-test_data_directory = data_directory
+data_directory = 'D:\\ExperimentData\\TextClassification\\SogouC.reduced\\Reduced'
 
 #the number of features you want to filtering to represent a document
 feature_number = 3000
